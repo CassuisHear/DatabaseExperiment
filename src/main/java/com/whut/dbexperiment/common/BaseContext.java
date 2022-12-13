@@ -10,10 +10,10 @@ public class BaseContext {
     /**
      * 设置当前线程的用户 id
      *
-     * @param empId 传入的当前用户 id
+     * @param userId 传入的当前用户 id
      */
-    public static void setCurrentId(Long empId) {
-        threadLocal.set(empId);
+    public static void setCurrentId(Long userId) {
+        threadLocal.set(userId);
     }
 
     /**

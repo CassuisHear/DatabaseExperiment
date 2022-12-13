@@ -28,4 +28,7 @@ public class Proj implements Serializable {
     //项目结束时间
     private LocalDateTime endTime;
 
+    //项目名
+    private String projName;
+
 }

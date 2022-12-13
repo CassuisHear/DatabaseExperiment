@@ -42,7 +42,8 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 数据库中重名 异常处理方法
+     * 数据库中 自定义异常 的处理方法，
+     * 可以添加更多处理逻辑
      *
      * @param ex 自定义的异常类CustomException对象
      * @return 出错信息

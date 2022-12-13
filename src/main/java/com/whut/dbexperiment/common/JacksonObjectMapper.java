@@ -45,7 +45,10 @@ public class JacksonObjectMapper extends ObjectMapper {
                 .addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)))
 
                 .addSerializer(BigInteger.class, ToStringSerializer.instance)
-                .addSerializer(Long.class, ToStringSerializer.instance)//Json数据只能接收16位，多余的会四舍五入，在这里将其转为String以免丢失精度
+
+                //Json数据只能接收16位，多余的会四舍五入，在这里将其转为String以免丢失精度
+                .addSerializer(Long.class, ToStringSerializer.instance)
+
                 .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)))
                 .addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)))
                 .addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));

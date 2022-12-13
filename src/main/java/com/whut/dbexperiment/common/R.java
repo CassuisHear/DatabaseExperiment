@@ -2,17 +2,19 @@ package com.whut.dbexperiment.common;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 此类是一个通用结果类，服务端响应的所有结果最终都会包装成此种类型返回给前端页面
+ * 此类是一个通用结果类，
+ * 服务端响应的所有结果最终都会以JSON数据的形式包装成此种类型返回给前端页面
  *
  * @param <T>
  */
 
 @Data
-public class R<T> {
+public class R<T> implements Serializable {
 
     //编码：1成功，0和其它数字为失败
     private Integer code;
