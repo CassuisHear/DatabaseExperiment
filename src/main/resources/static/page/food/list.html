@@ -14,29 +14,29 @@
    <div class="dashboard-container" id="food-app">
     <div class="container">
       <div class="tableBar">
-        <el-input
-          v-model="input"
-          placeholder="请输入菜品名称"
-          style="width: 250px"
-          clearable
-          @keyup.enter.native="handleQuery"
-        >
-          <i
-            slot="prefix"
-            class="el-input__icon el-icon-search"
-            style="cursor: pointer"
-            @click="init"
-          ></i>
-        </el-input>
+<!--        <el-input-->
+<!--          v-model="input"-->
+<!--          placeholder="请输入菜品名称"-->
+<!--          style="width: 250px"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        >-->
+<!--          <i-->
+<!--            slot="prefix"-->
+<!--            class="el-input__icon el-icon-search"-->
+<!--            style="cursor: pointer"-->
+<!--            @click="init"-->
+<!--          ></i>-->
+<!--        </el-input>-->
         <div class="tableLab">
-          <span class="span-btn delBut non" @click="deleteHandle('批量', null)">批量删除</span>
-          <span class="span-btn blueBug non" @click="statusHandle('1')">批量启售</span>
-          <span style="border:none;" class="span-btn delBut non" @click="statusHandle('0')">批量停售</span>
+<!--          <span class="span-btn delBut non" @click="deleteHandle('批量', null)">批量删除</span>-->
+<!--          <span class="span-btn blueBug non" @click="statusHandle('1')">批量启售</span>-->
+<!--          <span style="border:none;" class="span-btn delBut non" @click="statusHandle('0')">批量停售</span>-->
           <el-button
             type="primary"
-            @click="addFoodtype('add')"
+            @click="addUser('add')"
           >
-            + 新建菜品
+            + 新建成员
           </el-button>
         </div>
       </div>
@@ -46,43 +46,52 @@
         class="tableBox"
         @selection-change="handleSelectionChange"
       >
+<!--        <el-table-column-->
+<!--          type="selection"-->
+<!--          width="25"-->
+<!--        ></el-table-column>-->
         <el-table-column
-          type="selection"
-          width="25"
-        ></el-table-column>
-        <el-table-column
-          prop="name"
-          label="菜品名称"
-        ></el-table-column>
-        <el-table-column prop="image" label="图片" align="center">
-          <template slot-scope="{ row }">
-            <el-image style="width: auto; height: 40px; border:none;cursor: pointer;" 
-            :src="getImage(row.image)" 
-            :preview-src-list="[ `/common/download?name=${row.image}` ]" >
-            <div slot="error" class="image-slot">
-              <img src="./../../images/noImg.png"  style="width: auto; height: 40px; border:none;" >
-            </div>  
-          </el-image>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="categoryName"
-          label="菜品分类"
-        ></el-table-column>
-        <el-table-column label="售价">
-          <template slot-scope="scope">
-            <span style="margin-right: 10px;">￥{{ scope.row.price/100 }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="售卖状态">
-          <template slot-scope="scope">
-            <span style="margin-right: 10px;">{{ scope.row.status == '0' ? '停售' : '启售' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="updateTime"
-          label="最后操作时间"
+          prop="userName"
+          label="人员名称"
         >
+          <template slot-scope="scpoe">
+            {{scpoe.row.userName}}
+          </template>
+        </el-table-column>
+<!--        <el-table-column prop="image" label="图片" align="center">-->
+<!--          <template slot-scope="{ row }">-->
+<!--            <el-image style="width: auto; height: 40px; border:none;cursor: pointer;"-->
+<!--            :src="getImage(row.image)"-->
+<!--            :preview-src-list="[ `/common/download?name=${row.image}` ]" >-->
+<!--            <div slot="error" class="image-slot">-->
+<!--              <img src="./../../images/noImg.png"  style="width: auto; height: 40px; border:none;" >-->
+<!--            </div>-->
+<!--          </el-image>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column-->
+<!--          prop="categoryName"-->
+<!--          label="菜品分类"-->
+<!--        ></el-table-column>-->
+<!--        <el-table-column label="售价">-->
+<!--          <template slot-scope="scope">-->
+<!--            <span style="margin-right: 10px;">￥{{ scope.row.price/100 }}</span>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column label="售卖状态">-->
+<!--          <template slot-scope="scope">-->
+<!--            <span style="margin-right: 10px;">{{ scope.row.status == '0' ? '停售' : '启售' }}</span>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column-->
+<!--          prop="updateTime"-->
+<!--          label="最后操作时间"-->
+<!--        >-->
+<!--        </el-table-column>-->
+        <el-table-column label="性别" prop="sex">
+          <template slot-scope="scope">
+            <span>{{scope.row.sex}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -91,30 +100,48 @@
         >
           <template slot-scope="scope">
             <el-button
-              type="text"
-              size="small"
-              class="blueBug"
-              @click="addFoodtype(scope.row.id)"
+                    type="text"
+                    size="small"
+                    class="blueBug"
+                    @click="editHandle(scope.row)"
             >
               修改
             </el-button>
             <el-button
-              type="text"
-              size="small"
-              class="blueBug"
-              @click="statusHandle(scope.row)"
-            >
-              {{ scope.row.status == '0' ? '启售' : '停售' }}
-            </el-button>
-            <el-button
-              type="text"
-              size="small"
-              class="delBut non"
-              @click="deleteHandle('单删', scope.row.id)"
+                    type="text"
+                    size="small"
+                    class="delBut non"
+                    @click="deleteHandle(scope.row.id)"
             >
               删除
             </el-button>
           </template>
+<!--          <template slot-scope="scope">-->
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              size="small"-->
+<!--              class="blueBug"-->
+<!--              @click="addUser(scope.row.id)"-->
+<!--            >-->
+<!--              修改-->
+<!--            </el-button>-->
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              size="small"-->
+<!--              class="blueBug"-->
+<!--              @click="statusHandle(scope.row)"-->
+<!--            >-->
+<!--              {{ scope.row.status == '0' ? '启售' : '停售' }}-->
+<!--            </el-button>-->
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              size="small"-->
+<!--              class="delBut non"-->
+<!--              @click="deleteHandle('单删', scope.row.id)"-->
+<!--            >-->
+<!--              删除-->
+<!--            </el-button>-->
+<!--          </template>-->
         </el-table-column>
       </el-table>
       <el-pagination
@@ -181,7 +208,7 @@
             this.init();
           },
           // 添加
-          addFoodtype (st) {
+          addUser (st) {
             if (st === 'add'){
               window.parent.menuHandle({
                 id: '4',
@@ -199,16 +226,19 @@
 
           // 删除
           deleteHandle (type, id) {
-            if (type === '批量' && id === null) {
-              if (this.checkList.length === 0) {
-                return this.$message.error('请选择删除对象')
-              }
+            // if (type === '批量' && id === null) {
+            //   if (this.checkList.length === 0) {
+            //     return this.$message.error('请选择删除对象')
+            //   }
+            // }
+            if(id===null){
+              return this.$message.error('请选择删除对象');
             }
             this.$confirm('确认删除该菜品, 是否继续?', '确定删除', {
               'confirmButtonText': '确定',
               'cancelButtonText': '取消',
             }).then(() => {
-              deleteDish(type === '批量' ? this.checkList.join(',') : id).then(res => {
+              removeUser(id).then(res => {
                 if (res.code === 1) {
                   this.$message.success('删除成功！')
                   this.handleQuery()

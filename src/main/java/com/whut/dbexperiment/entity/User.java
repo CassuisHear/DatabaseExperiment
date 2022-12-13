@@ -2,6 +2,7 @@ package com.whut.dbexperiment.entity;
 
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.context.annotation.Primary;
 
 import java.io.Serializable;
 

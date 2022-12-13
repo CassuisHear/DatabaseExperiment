@@ -8,7 +8,7 @@ const getDishPage = (params) => {
 }
 
 // 删除接口
-const deleteDish = (ids) => {
+const removeUser = (ids) => {
   return $axios({
     url: '/dish',
     method: 'delete',

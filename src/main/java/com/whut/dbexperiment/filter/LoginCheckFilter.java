@@ -24,6 +24,11 @@ public class LoginCheckFilter implements Filter {
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
     @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
+    @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -62,6 +67,11 @@ public class LoginCheckFilter implements Filter {
         //5、如果未登录则返回未登录结果，通过输出流的方式向客户端页面响应数据
         log.info("用户未登录...");
         response.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
+    }
+
+    @Override
+    public void destroy() {
+
     }
 
     /**
