@@ -6,6 +6,14 @@ const getUserList = (params) => {
         params
     })
 }
+const getProjList = (params) => {
+    return $axios({
+        url: 'user',
+        method: 'get',
+        params
+    })
+}
+
 
 const addUser = (params) => {
     return $axios({
@@ -18,7 +26,7 @@ const addUser = (params) => {
 // 删除接口
 const deleteUser = (ids) => {
     return $axios({
-        url: '/dish',
+        url: '/user',
         method: 'delete',
         params: {ids}
     })

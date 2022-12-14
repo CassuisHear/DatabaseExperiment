@@ -23,8 +23,7 @@
                 <el-table
                         :data="tableData"
                         stripe
-                        class="tableBox"
-                >
+                        class="tableBox">
                     <el-table-column
                             prop="username"
                             label="姓名">
@@ -34,16 +33,14 @@
                     </el-table-column>
                     <el-table-column
                             prop="usersex"
-                            label="性别"
-                    >
+                            label="性别">
                         <template slot-scope="scope">
                             <span>{{ scope.row.usersex }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                             prop="projs"
-                            label="所属项目"
-                    >
+                            label="所属项目">
                         <template slot-scope="scope">
                             <span>{{ scope.row.projs }}</span>
                         </template>
@@ -51,23 +48,27 @@
                     <el-table-column
                             label="操作"
                             width="160"
-                            align="center"
-                    >
+                            align="center">
                         <template slot-scope="scope">
                             <el-button
                                     type="text"
                                     size="small"
                                     class="blueBug"
-                                    @click="editHandle(scope.row)"
-                            >
+                                    @click="editHandle(scope.row)">
                                 修改
                             </el-button>
                             <el-button
                                     type="text"
                                     size="small"
+                                    class="blueBug"
+                                    @click="updateHandle(scope.row)">
+                                项目调整
+                            </el-button>
+                            <el-button
+                                    type="text"
+                                    size="small"
                                     class="delBut non"
-                                    @click="deleteHandle(scope.row.id)"
-                            >
+                                    @click="deleteHandle(scope.row.id)">
                                 删除
                             </el-button>
                         </template>
@@ -83,69 +84,87 @@
                         @current-change="handleCurrentChange"
                 ></el-pagination>
             </div>
+            <!--            user增加和修改的框-->
             <el-dialog
                     :title="classData.title"
                     :visible.sync="classData.dialogVisible"
                     width="30%"
-                    :before-close="handleClose"
-            >
+                    :before-close="handleClose">
                 <el-form
                         class="demo-form-inline"
-                        label-width="100px"
-                >
+                        label-width="100px">
                     <el-form-item label="姓名">
                         <el-input
-                                v-model="classData.userName"
+                                v-model="classData.username"
                                 placeholder="请输入姓名"
-                                maxlength="14"></el-input>
+                                maxlength="14">
+                        </el-input>
                     </el-form-item>
                     <el-form-item
                             label="性别:"
-                            prop="categoryId"
-                    >
+                            prop="sex">
                         <el-select
-                                v-model="classData.sex"
-                                placeholder="请选择性别"
-                        >
+                                v-model="classData.usersex"
+                                placeholder="请选择性别">
                             <el-option v-for="(item,index) in ['男','女']" :key="index" :label="item"
-                                       :value="item"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="所属项目">
-                        <!--                        <el-input-->
-                        <!--                                v-model="classData.projName"-->
-                        <!--                                placeholder=""-->
-                        <!--                                maxlength="14"></el-input>-->
-                        <el-select
-                                v-model="classData.projName"
-                                placeholder="请选择所属项目"
-                        >
-                            <el-option v-for="(item,index) in projList" :key="index" :label="item.projName"
-                                       :value="item.id"></el-option>
+                                       :value="item">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
                 <span
                         slot="footer"
-                        class="dialog-footer"
-                >
-        <el-button
-                size="medium"
-                @click="classData.dialogVisible = false"
-        >取 消</el-button>
-        <el-button
-                type="primary"
-                size="medium"
-                @click="submitForm()"
-        >确 定</el-button>
-        <el-button
-                v-if="action !== 'edit'"
-                type="primary"
-                size="medium"
-                class="continue"
-                @click="submitForm('go')"
-        > 保存并继续添加 </el-button>
-      </span>
+                        class="dialog-footer">
+                    <el-button
+                            size="medium"
+                            @click="classData.dialogVisible = false
+                                    classData.usersex=''
+                                    classData.username=''">
+                        取 消
+                    </el-button>
+                    <el-button
+                            type="primary"
+                            size="medium"
+                            @click="submitForm()">
+                        确 定
+                    </el-button>
+                    <el-button
+                            v-if="action !== 'edit'"
+                            type="primary"
+                            size="medium"
+                            class="continue"
+                            @click="submitForm('go')">
+                        保存并继续添加
+                    </el-button>
+                 </span>
+            </el-dialog>
+            <!--            项目调整的框-->
+            <el-dialog
+                    :title="classData.title"
+                    :visible.sync="classData.dialogUpdateVisible"
+                    width="30%"
+                    :before-close="handleUpdateClose">
+                <el-form
+                        class="demo-form-inline"
+                        label-width="100px">
+                    <el-form-item label="项目">
+                    </el-form-item>
+                </el-form>
+                <span
+                        slot="footer"
+                        class="dialog-footer">
+                    <el-button
+                            size="medium"
+                            @click="classData.dialogUpdateVisible = false">
+                        取 消
+                    </el-button>
+                    <el-button
+                            type="primary"
+                            size="medium"
+                            @click="submitUpdateForm()">
+                        确 定
+                    </el-button>
+                 </span>
             </el-dialog>
         </div>
         <!-- 开发环境版本，包含了有帮助的命令行警告 -->
@@ -155,7 +174,7 @@
         <!-- 引入axios -->
         <script src="../../plugins/axios/axios.min.js"></script>
         <script src="../../js/request.js"></script>
-        <script src="../../api/proj.js"></script>
+        <script src="../../api/user.js"></script>
         <script>
             new Vue({
                 el: '#category-app',
@@ -171,6 +190,7 @@
                         classData: {
                             'title': '添加菜品分类',
                             'dialogVisible': false,
+                            'dialogUpdateVisible': false,
                             'categoryId': '',
                             'name': '',
                             sort: '',
@@ -183,9 +203,9 @@
                 computed: {},
                 created() {
                     this.init()
-                    // this.getList()
                 },
                 mounted() {
+
                 },
                 methods: {
                     async init() {
@@ -215,20 +235,23 @@
                         this.classData.title = '添加用户信息'
                         this.action = 'add'
                         this.classData.name = ''
-                        // this.classData.sort = ''
                         this.classData.dialogVisible = true
                     },
                     editHandle(dat) {
                         this.classData.title = '修改用户信息'
                         this.action = 'edit'
                         this.classData.name = dat.name
-                        // this.classData.sort = dat.sort
                         this.classData.id = dat.id
                         this.classData.dialogVisible = true
                     },
                     // 关闭弹窗
                     handleClose() {
                         this.classData.dialogVisible = false
+                        this.classData.username = ''
+                        this.classData.usersex = ''
+                    },
+                    handleUpdateClose() {
+                        this.classData.dialogUpdateVisible = false
                     },
                     //删除
                     deleteHandle(id) {
@@ -249,31 +272,46 @@
                             })
                         })
                     },
-                    // getList() {
-                    //     this.projList=[{id:1,projName:'1'},{id:2,projName:'2'},{id:2,projName:'2'}]
-                    //     getProjList(
-                    //         {
-                    //             'page': this.page,
-                    //             'pageSize': this.pageSize
-                    //         }
-                    //     ).then(res => {
-                    //         if (res.code === 1) {
-                    //             this.projList = res.data
-                    //         } else {
-                    //             this.$message.error(res.msg || '操作失败')
-                    //         }
-                    //     })
-                    // },
+                    //调整项目
+                    updateHandle(dat) {
+                        this.classData.title = '选择项目'
+                        this.action = 'update'
+                        this.classData.id = dat.id
+                        this.classData.dialogUpdateVisible = true
+                    },
+                    submitUpdateForm() {
+                        const classData = this.classData
+                        if (this.action === 'update') {
+                            //TODO
+                            updateUser({
+                                'id': this.classData.id,
+                                'userName': this.classData.userName,
+                                'sex': this.classData.sex,
+                                'projName': this.classData.projName,
+                                'projs': this.projList
+                                // sort: this.classData.sort
+                            }).then(res => {
+                                if (res.code === 1) {
+                                    this.$message.success('分类修改成功！')
+                                    this.classData.dialogVisible = false
+                                    this.handleQuery()
+                                } else {
+                                    this.$message.error(res.msg || '操作失败')
+                                }
+                            }).catch(err => {
+                                this.$message.error('请求出错了：' + err)
+                            })
+                        }
+                    },
                     //数据提交
                     submitForm(st) {
                         const classData = this.classData
-                        const valid = (classData.name === 0 || classData.name)
                         if (this.action === 'add') {
-                            if (valid) {
+                            if (classData.username !== '') {
                                 addUser({
                                     'userName': this.classData.userName,
-                                    'sex':this.classData.sex,
-                                    'projName':this.classData.projName
+                                    'sex': this.classData.sex,
+                                    'projName': this.classData.projName
                                     // sort: classData.sort
                                 }).then(res => {
                                     console.log(res)
@@ -296,12 +334,13 @@
                             } else {
                                 this.$message.error('请输入用户名称')
                             }
-                        } else if (valid) {
+                        } else if (this.action === 'edit') {
                             updateUser({
                                 'id': this.classData.id,
                                 'userName': this.classData.userName,
-                                'sex':this.classData.sex,
-                                'projName':this.classData.projName
+                                'sex': this.classData.sex,
+                                'projName': this.classData.projName,
+                                'projs': []
                                 // sort: this.classData.sort
                             }).then(res => {
                                 if (res.code === 1) {
@@ -314,8 +353,6 @@
                             }).catch(err => {
                                 this.$message.error('请求出错了：' + err)
                             })
-                        } else {
-                            this.$message.error('请输入用户名称')
                         }
                     },
                     handleSizeChange(val) {
@@ -331,283 +368,3 @@
         </script>
     </body>
 </html>
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--    <head>-->
-<!--        <meta charset="UTF-8">-->
-<!--        <meta http-equiv="X-UA-Compatible" content="IE=edge">-->
-<!--        <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--        <title>Document</title>-->
-<!--        &lt;!&ndash; 引入样式 &ndash;&gt;-->
-<!--        <link rel="stylesheet" href="../../plugins/element-ui/index.css"/>-->
-<!--        <link rel="stylesheet" href="../../styles/common.css"/>-->
-<!--        <link rel="stylesheet" href="../../styles/page.css"/>-->
-<!--    </head>-->
-<!--    <body>-->
-<!--        <div class="dashboard-container" id="food-app">-->
-<!--            <div class="container">-->
-<!--                <div class="tableBar">-->
-<!--                    <div class="tableLab">-->
-<!--                        <el-button-->
-<!--                                type="primary"-->
-<!--                                @click="addUser('add')"-->
-<!--                        >-->
-<!--                            + 新建成员-->
-<!--                        </el-button>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <el-table-->
-<!--                        :data="tableData"-->
-<!--                        stripe-->
-<!--                        class="tableBox"-->
-<!--                        @selection-change="handleSelectionChange"-->
-<!--                >-->
-<!--                    <el-table-column-->
-<!--                            prop="userName"-->
-<!--                            label="人员名称"-->
-<!--                    >-->
-<!--                        <template slot-scope="scpoe">-->
-<!--                            {{scpoe.row.userName}}-->
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                    <el-table-column label="性别" prop="sex">-->
-<!--                        <template slot-scope="scope">-->
-<!--                            <span>{{scope.row.sex}}</span>-->
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                    <el-table-column-->
-<!--                            label="操作"-->
-<!--                            width="160"-->
-<!--                            align="center"-->
-<!--                    >-->
-<!--                        <template slot-scope="scope">-->
-<!--                            <el-button-->
-<!--                                    type="text"-->
-<!--                                    size="small"-->
-<!--                                    class="blueBug"-->
-<!--                                    @click="editHandle(scope.row)"-->
-<!--                            >-->
-<!--                                修改-->
-<!--                            </el-button>-->
-<!--                            <el-button-->
-<!--                                    type="text"-->
-<!--                                    size="small"-->
-<!--                                    class="delBut non"-->
-<!--                                    @click="deleteHandle(scope.row.id)"-->
-<!--                            >-->
-<!--                                删除-->
-<!--                            </el-button>-->
-<!--                        </template>-->
-<!--                    </el-table-column>-->
-<!--                </el-table>-->
-<!--                <el-dialog-->
-<!--                        :title="classData.title"-->
-<!--                        :visible.sync="classData.dialogVisible"-->
-<!--                        width="30%"-->
-<!--                        :before-close="handleClose"-->
-<!--                >-->
-<!--                    <el-form-->
-<!--                            class="demo-form-inline"-->
-<!--                            label-width="100px"-->
-<!--                    >-->
-<!--                        <el-form-item label="项目名称：">-->
-<!--                            <el-input-->
-<!--                                    v-model="classData.name"-->
-<!--                                    placeholder="请输入项目名称"-->
-<!--                                    maxlength="14"></el-input>-->
-<!--                        </el-form-item>-->
-<!--                        &lt;!&ndash;                    <el-form-item label="排序：">&ndash;&gt;-->
-<!--                        &lt;!&ndash;                        <el-input v-model="classData.sort" type="number" placeholder="请输入排序"></el-input>&ndash;&gt;-->
-<!--                        &lt;!&ndash;                    </el-form-item>&ndash;&gt;-->
-<!--                    </el-form>-->
-<!--                    <span-->
-<!--                            slot="footer"-->
-<!--                            class="dialog-footer"-->
-<!--                    >-->
-<!--        <el-button-->
-<!--                size="medium"-->
-<!--                @click="classData.dialogVisible = false"-->
-<!--        >取 消</el-button>-->
-<!--        <el-button-->
-<!--                type="primary"-->
-<!--                size="medium"-->
-<!--                @click="submitForm()"-->
-<!--        >确 定</el-button>-->
-<!--        <el-button-->
-<!--                v-if="action !== 'edit'"-->
-<!--                type="primary"-->
-<!--                size="medium"-->
-<!--                class="continue"-->
-<!--                @click="submitForm('go')"-->
-<!--        > 保存并继续添加 </el-button>-->
-<!--                <el-pagination-->
-<!--                        class="pageList"-->
-<!--                        :page-sizes="[10, 20, 30, 40]"-->
-<!--                        :page-size="pageSize"-->
-<!--                        layout="total, sizes, prev, pager, next, jumper"-->
-<!--                        :total="counts"-->
-<!--                        @size-change="handleSizeChange"-->
-<!--                        :current-page.sync="page"-->
-<!--                        @current-change="handleCurrentChange"-->
-<!--                ></el-pagination>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; 开发环境版本，包含了有帮助的命令行警告 &ndash;&gt;-->
-<!--        <script src="../../plugins/vue/vue.js"></script>-->
-<!--        &lt;!&ndash; 引入组件库 &ndash;&gt;-->
-<!--        <script src="../../plugins/element-ui/index.js"></script>-->
-<!--        &lt;!&ndash; 引入axios &ndash;&gt;-->
-<!--        <script src="../../plugins/axios/axios.min.js"></script>-->
-<!--        <script src="../../js/request.js"></script>-->
-<!--        <script src="../../api/user.js"></script>-->
-<!--        <script>-->
-<!--            new Vue({-->
-<!--                el: '#food-app',-->
-<!--                data() {-->
-<!--                    return {-->
-<!--                        input: '',-->
-<!--                        counts: 0,-->
-<!--                        page: 1,-->
-<!--                        pageSize: 10,-->
-<!--                        tableData: [],-->
-<!--                        dishState: '',-->
-<!--                        checkList: []-->
-<!--                    }-->
-<!--                },-->
-<!--                computed: {},-->
-<!--                created() {-->
-<!--                    this.init()-->
-<!--                },-->
-<!--                mounted() {-->
-<!--                },-->
-<!--                methods: {-->
-<!--                    async init() {-->
-<!--                        const params = {-->
-<!--                            page: this.page,-->
-<!--                            pageSize: this.pageSize,-->
-<!--                            name: this.input ? this.input : undefined-->
-<!--                        }-->
-<!--                        this.tableData = [{userName: '张三', sex: "男"}, {userName: '李四', sex: '女'}, {-->
-<!--                            userName: '李四',-->
-<!--                            sex: '女'-->
-<!--                        }, {userName: '李四', sex: '女'}, {userName: '李四', sex: '女'}, {-->
-<!--                            userName: '李四',-->
-<!--                            sex: '女'-->
-<!--                        }, {userName: '李四', sex: '女'}, {userName: '李四', sex: '女'}, {-->
-<!--                            userName: '李四',-->
-<!--                            sex: '女'-->
-<!--                        }, {userName: '李四', sex: '女'}, {userName: '李四', sex: '女'}, {-->
-<!--                            userName: '李四',-->
-<!--                            sex: '女'-->
-<!--                        }, {userName: '李四', sex: '女'}];-->
-<!--                        this.counts = this.tableData.length-->
-<!--                        // await getUserList(params).then(res => {-->
-<!--                        //   if (String(res.code) === '1') {-->
-<!--                        //     this.tableData = res.data.records || []-->
-<!--                        //     this.counts = res.data.total-->
-<!--                        //   }-->
-<!--                        // }).catch(err => {-->
-<!--                        //   this.$message.error('请求出错了123' + err)-->
-<!--                        // })-->
-<!--                    },-->
-<!--                    getImage(image) {-->
-<!--                        return `/common/download?name=${image}`-->
-<!--                    },-->
-<!--                    handleQuery() {-->
-<!--                        this.page = 1;-->
-<!--                        this.init();-->
-<!--                    },-->
-<!--                    // 添加-->
-<!--                    addUser(st) {-->
-<!--                        if (st === 'add') {-->
-<!--                            window.parent.menuHandle({-->
-<!--                                id: '4',-->
-<!--                                url: '/backend/page/food/add.html',-->
-<!--                                name: '添加菜品'-->
-<!--                            }, true)-->
-<!--                        } else {-->
-<!--                            window.parent.menuHandle({-->
-<!--                                id: '4',-->
-<!--                                url: '/backend/page/food/add.html?id=' + st,-->
-<!--                                name: '修改菜品'-->
-<!--                            }, true)-->
-<!--                        }-->
-<!--                    },-->
-
-<!--                    // 删除-->
-<!--                    deleteHandle(type, id) {-->
-<!--                        // if (type === '批量' && id === null) {-->
-<!--                        //   if (this.checkList.length === 0) {-->
-<!--                        //     return this.$message.error('请选择删除对象')-->
-<!--                        //   }-->
-<!--                        // }-->
-<!--                        if (id === null) {-->
-<!--                            return this.$message.error('请选择删除对象');-->
-<!--                        }-->
-<!--                        this.$confirm('确认删除该用户, 是否继续?', '确定删除', {-->
-<!--                            'confirmButtonText': '确定',-->
-<!--                            'cancelButtonText': '取消',-->
-<!--                        }).then(() => {-->
-<!--                            deleteUser(id).then(res => {-->
-<!--                                if (res.code === 1) {-->
-<!--                                    this.$message.success('删除成功！')-->
-<!--                                    this.handleQuery()-->
-<!--                                } else {-->
-<!--                                    this.$message.error(res.msg || '操作失败')-->
-<!--                                }-->
-<!--                            }).catch(err => {-->
-<!--                                this.$message.error('请求出错了：' + err)-->
-<!--                            })-->
-<!--                        })-->
-<!--                    },-->
-<!--                    editHandle(data) {-->
-
-<!--                    },-->
-
-<!--                    //状态更改-->
-<!--                    statusHandle(row) {-->
-<!--                        let params = {}-->
-<!--                        if (typeof row === 'string') {-->
-<!--                            if (this.checkList.length === 0) {-->
-<!--                                this.$message.error('批量操作，请先勾选操作菜品！')-->
-<!--                                return false-->
-<!--                            }-->
-<!--                            params.id = this.checkList.join(',')-->
-<!--                            params.status = row-->
-<!--                        } else {-->
-<!--                            params.id = row.id-->
-<!--                            params.status = row.status ? '0' : '1'-->
-<!--                        }-->
-<!--                        this.dishState = params-->
-<!--                        this.$confirm('确认更改该菜品状态?', '提示', {-->
-<!--                            'confirmButtonText': '确定',-->
-<!--                            'cancelButtonText': '取消',-->
-<!--                            'type': 'warning'-->
-<!--                        }).then(() => {-->
-<!--                            // 起售停售-&#45;&#45;批量起售停售接口-->
-<!--                            dishStatusByStatus(this.dishState).then(res => {-->
-<!--                                if (res.code === 1) {-->
-<!--                                    this.$message.success('菜品状态已经更改成功！')-->
-<!--                                    this.handleQuery()-->
-<!--                                } else {-->
-<!--                                    this.$message.error(res.msg || '操作失败')-->
-<!--                                }-->
-<!--                            }).catch(err => {-->
-<!--                                this.$message.error('请求出错了：' + err)-->
-<!--                            })-->
-<!--                        })-->
-<!--                    },-->
-<!--                    handleSizeChange(val) {-->
-<!--                        this.pageSize = val-->
-<!--                        this.init()-->
-<!--                    },-->
-<!--                    handleCurrentChange(val) {-->
-<!--                        this.page = val-->
-<!--                        this.init()-->
-<!--                    }-->
-<!--                }-->
-<!--            })-->
-<!--        </script>-->
-<!--    </body>-->
-<!--</html>-->
