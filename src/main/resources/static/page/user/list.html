@@ -26,26 +26,26 @@
                         class="tableBox"
                 >
                     <el-table-column
-                            prop="userName"
+                            prop="username"
                             label="姓名">
                         <template slot-scope="scope">
-                            <span>{{scope.row.userName}}</span>
+                            <span>{{scope.row.username}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="sex"
+                            prop="usersex"
                             label="性别"
                     >
                         <template slot-scope="scope">
-                            <span>{{ scope.row.sex }}</span>
+                            <span>{{ scope.row.usersex }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="projName"
+                            prop="projs"
                             label="所属项目"
                     >
                         <template slot-scope="scope">
-                            <span>{{ scope.row.projName }}</span>
+                            <span>{{ scope.row.projs }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -174,60 +174,37 @@
                             'categoryId': '',
                             'name': '',
                             sort: '',
-                            'userName': '',
-                            'sex': '',
-                            'projName': ''
+                            'username': '',
+                            'usersex': '',
+                            'projs': ''
                         },
                     }
                 },
                 computed: {},
                 created() {
                     this.init()
-                    this.getList()
+                    // this.getList()
                 },
                 mounted() {
                 },
                 methods: {
-
                     async init() {
-                        this.tableData = [{userName: 'zhangsan', sex:'nan', projName: 'nihao'}, {
-                            userName: 'zhangsan',
-                            sex:'nan',
-                            projName: 'nihao'
-                        }, {userName: 'zhangsan', sex:'nan', projName: 'nihao'}, {
-                            userName: 'zhangsan',
-                            sex:'nan',
-                            projName: 'nihao'
-                        }, {userName: 'zhangsan', sex:'nan', projName: 'nihao'}, {
-                            userName: 'zhangsan',
-                            sex:'nan',
-                            projName: 'nihao'
-                        }, {userName: 'zhangsan', sex:'nan', projName: 'nihao'}, {
-                            userName: 'zhangsan',
-                            sex:'nan',
-                            projName: 'nihao'
-                        }, {userName: 'zhangsan', sex:'nan', projName: 'nihao'}, {
-                            userName: 'zhangsan',
-                            sex:'nan',
-                            projName: 'nihao'
-                        },]
-                        this.counts = this.tableData.length
-                        // 确定在哪一页和页的大小
-                        // await getUserList(
-                        //     {
-                        //         'page': this.page,
-                        //         'pageSize': this.pageSize
-                        //     }
-                        // ).then(res => {
-                        //     if (String(res.code) === '1') {
-                        //         this.tableData = res.data.records
-                        //         this.counts = Number(res.data.total)
-                        //     } else {
-                        //         this.$message.error(res.msg || '操作失败')
-                        //     }
-                        // }).catch(err => {
-                        //     this.$message.error('请求出错了：' + err)
-                        // })
+                        const params = {
+                            page: this.page,
+                            pageSize: this.pageSize,
+                            name: this.input ? this.input : undefined
+                        }
+                        //确定在哪一页和页的大小
+                        await getUserList(params).then(res => {
+                            if (String(res.code) === '1') {
+                                this.tableData = res.data.records
+                                this.counts = Number(res.data.total)
+                            } else {
+                                this.$message.error(res.msg || '操作失败')
+                            }
+                        }).catch(err => {
+                            this.$message.error('请求出错了：' + err)
+                        })
                     },
                     handleQuery() {
                         this.page = 1;
@@ -235,14 +212,14 @@
                     },
                     // 添加
                     addClass() {
-                        this.classData.title = '添加项目信息'
+                        this.classData.title = '添加用户信息'
                         this.action = 'add'
                         this.classData.name = ''
                         // this.classData.sort = ''
                         this.classData.dialogVisible = true
                     },
                     editHandle(dat) {
-                        this.classData.title = '修改信息'
+                        this.classData.title = '修改用户信息'
                         this.action = 'edit'
                         this.classData.name = dat.name
                         // this.classData.sort = dat.sort
@@ -272,21 +249,21 @@
                             })
                         })
                     },
-                    getList() {
-                        this.projList=[{id:1,projName:'1'},{id:2,projName:'2'},{id:2,projName:'2'}]
-                        // getProjList(
-                        //     {
-                        //         'page': this.page,
-                        //         'pageSize': this.pageSize
-                        //     }
-                        // ).then(res => {
-                        //     if (res.code === 1) {
-                        //         this.projList = res.data
-                        //     } else {
-                        //         this.$message.error(res.msg || '操作失败')
-                        //     }
-                        // })
-                    },
+                    // getList() {
+                    //     this.projList=[{id:1,projName:'1'},{id:2,projName:'2'},{id:2,projName:'2'}]
+                    //     getProjList(
+                    //         {
+                    //             'page': this.page,
+                    //             'pageSize': this.pageSize
+                    //         }
+                    //     ).then(res => {
+                    //         if (res.code === 1) {
+                    //             this.projList = res.data
+                    //         } else {
+                    //             this.$message.error(res.msg || '操作失败')
+                    //         }
+                    //     })
+                    // },
                     //数据提交
                     submitForm(st) {
                         const classData = this.classData

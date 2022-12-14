@@ -1,14 +1,12 @@
 package com.whut.dbexperiment.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.whut.dbexperiment.common.R;
 import com.whut.dbexperiment.entity.User;
 import com.whut.dbexperiment.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -67,4 +65,22 @@ public class UserController {
         return R.success("退出成功!");
     }
 
+    /**
+     * 人员的分页查询
+     *
+     * @param page     当前页的页码
+     * @param pageSize 分页的大小
+     * @return 分页的结果
+     */
+    @GetMapping("/page")
+    public R<Page> pageUser(int page, int pageSize){
+
+        //创建分页构造器
+        Page pageAns = new Page(page, pageSize);
+
+        //调用拓展的方法进行查询
+        userService.getUserDtos(pageAns);
+
+        return R.success(pageAns);
+    }
 }

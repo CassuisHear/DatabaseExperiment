@@ -41,19 +41,19 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="state"
+                            prop="projStatus"
                             label="项目状态"
                     >
                         <template slot-scope="scope">
-                            <span>{{ scope.row.state }}</span>
+                            <span>{{ scope.row.projStatus }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="startTime"
+                            prop="beginTime"
                             label="开始时间"
                     >
                         <template slot-scope="scope">
-                            {{scope.row.startTime}}
+                            {{scope.row.beginTime}}
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -169,8 +169,8 @@
                             sort: '',
                             'projName': '',
                             'userCount': '',
-                            'state': '',
-                            'startTime': '',
+                            'projStatus': '',
+                            'beginTime': '',
                             'endTime': ''
                         },
                     }
@@ -182,56 +182,23 @@
                 mounted() {
                 },
                 methods: {
-
                     async init() {
-                        this.tableData = [{
-                            projName: 'nihao',
-                            userCount: '3',
-                            state: 'success',
-                            startTime: '1',
-                            endTime: '2'
-                        }, {
-                            projName: 'nihao',
-                            userCount: '3',
-                            state: 'success',
-                            startTime: '1',
-                            endTime: '2'
-                        }, {
-                            projName: 'nihao',
-                            userCount: '3',
-                            state: 'success',
-                            startTime: '1',
-                            endTime: '2'
-                        }, {
-                            projName: 'nihao',
-                            userCount: '3',
-                            state: 'success',
-                            startTime: '1',
-                            endTime: '2'
-                        }, {
-                            projName: 'nihao',
-                            userCount: '3',
-                            state: 'success',
-                            startTime: '1',
-                            endTime: '2'
-                        }, {projName: 'nihao', userCount: '3', state: 'success', startTime: '1', endTime: '2'}]
-                        this.counts=this.tableData.length
+                        const params = {
+                            page: this.page,
+                            pageSize: this.pageSize,
+                            name: this.input ? this.input : undefined
+                        }
                         //确定在哪一页和页的大小
-                        // await getProjList(
-                        //     {
-                        //         'page': this.page,
-                        //         'pageSize': this.pageSize
-                        //     }
-                        // ).then(res => {
-                        //     if (String(res.code) === '1') {
-                        //         this.tableData = res.data.records
-                        //         this.counts = Number(res.data.total)
-                        //     } else {
-                        //         this.$message.error(res.msg || '操作失败')
-                        //     }
-                        // }).catch(err => {
-                        //     this.$message.error('请求出错了：' + err)
-                        // })
+                        await getProjList(params).then(res => {
+                            if (String(res.code) === '1') {
+                                this.tableData = res.data.records
+                                this.counts = Number(res.data.total)
+                            } else {
+                                this.$message.error(res.msg || '操作失败')
+                            }
+                        }).catch(err => {
+                            this.$message.error('请求出错了：' + err)
+                        })
                     },
                     handleQuery() {
                         this.page = 1;
@@ -239,14 +206,14 @@
                     },
                     // 添加
                     addClass() {
-                        this.classData.title = '添加用户信息'
+                        this.classData.title = '添加项目信息'
                         this.action = 'add'
                         this.classData.name = ''
                         // this.classData.sort = ''
                         this.classData.dialogVisible = true
                     },
                     editHandle(dat) {
-                        this.classData.title = '修改用户信息'
+                        this.classData.title = '修改信项目息'
                         this.action = 'edit'
                         this.classData.name = dat.name
                         // this.classData.sort = dat.sort
