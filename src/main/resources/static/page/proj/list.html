@@ -14,16 +14,9 @@
         <div class="dashboard-container" id="category-app">
             <div class="container">
                 <div class="tableBar" style="display: inline-block">
-                    <!--        <el-button-->
-                    <!--          type="primary"-->
-                    <!--          class="continue"-->
-                    <!--          @click="addClass('class')"-->
-                    <!--        >-->
-                    <!--          + 新增菜品分类-->
-                    <!--        </el-button>-->
                     <el-button
                             type="primary"
-                            @click="addProj()">
+                            @click="addClass">
                         + 新增项目
                     </el-button>
                 </div>
@@ -71,10 +64,6 @@
                             {{scope.row.endTime}}
                         </template>
                     </el-table-column>
-<!--                    <el-table-column-->
-<!--                            prop="sort"-->
-<!--                            label="排序">-->
-<!--                    </el-table-column>-->
                     <el-table-column
                             label="操作"
                             width="160"
@@ -126,9 +115,9 @@
                                 placeholder="请输入项目名称"
                                 maxlength="14"></el-input>
                     </el-form-item>
-<!--                    <el-form-item label="排序：">-->
-<!--                        <el-input v-model="classData.sort" type="number" placeholder="请输入排序"></el-input>-->
-<!--                    </el-form-item>-->
+                    <!--                    <el-form-item label="排序：">-->
+                    <!--                        <el-input v-model="classData.sort" type="number" placeholder="请输入排序"></el-input>-->
+                    <!--                    </el-form-item>-->
                 </el-form>
                 <span
                         slot="footer"
@@ -160,7 +149,7 @@
         <!-- 引入axios -->
         <script src="../../plugins/axios/axios.min.js"></script>
         <script src="../../js/request.js"></script>
-        <script src="../../api/category.js"></script>
+        <script src="../../api/proj.js"></script>
         <script>
             new Vue({
                 el: '#category-app',
@@ -177,7 +166,12 @@
                             'dialogVisible': false,
                             'categoryId': '',
                             'name': '',
-                            sort: ''
+                            sort: '',
+                            'projName': '',
+                            'userCount': '',
+                            'state': '',
+                            'startTime': '',
+                            'endTime': ''
                         },
                     }
                 },
@@ -188,42 +182,74 @@
                 mounted() {
                 },
                 methods: {
+
                     async init() {
-                        await getCategoryPage({'page': this.page, 'pageSize': this.pageSize}).then(res => {
-                            if (String(res.code) === '1') {
-                                this.tableData = res.data.records
-                                this.counts = Number(res.data.total)
-                            } else {
-                                this.$message.error(res.msg || '操作失败')
-                            }
-                        }).catch(err => {
-                            this.$message.error('请求出错了：' + err)
-                        })
+                        this.tableData = [{
+                            projName: 'nihao',
+                            userCount: '3',
+                            state: 'success',
+                            startTime: '1',
+                            endTime: '2'
+                        }, {
+                            projName: 'nihao',
+                            userCount: '3',
+                            state: 'success',
+                            startTime: '1',
+                            endTime: '2'
+                        }, {
+                            projName: 'nihao',
+                            userCount: '3',
+                            state: 'success',
+                            startTime: '1',
+                            endTime: '2'
+                        }, {
+                            projName: 'nihao',
+                            userCount: '3',
+                            state: 'success',
+                            startTime: '1',
+                            endTime: '2'
+                        }, {
+                            projName: 'nihao',
+                            userCount: '3',
+                            state: 'success',
+                            startTime: '1',
+                            endTime: '2'
+                        }, {projName: 'nihao', userCount: '3', state: 'success', startTime: '1', endTime: '2'}]
+                        this.counts=this.tableData.length
+                        //确定在哪一页和页的大小
+                        // await getProjList(
+                        //     {
+                        //         'page': this.page,
+                        //         'pageSize': this.pageSize
+                        //     }
+                        // ).then(res => {
+                        //     if (String(res.code) === '1') {
+                        //         this.tableData = res.data.records
+                        //         this.counts = Number(res.data.total)
+                        //     } else {
+                        //         this.$message.error(res.msg || '操作失败')
+                        //     }
+                        // }).catch(err => {
+                        //     this.$message.error('请求出错了：' + err)
+                        // })
                     },
                     handleQuery() {
                         this.page = 1;
                         this.init();
                     },
                     // 添加
-                    addProj() {
-                        // if (st == 'class') {
-                        //     this.classData.title = '新增菜品分类'
-                        //     this.type = '1'
-                        // } else {
-                        //     this.classData.title = '新增套餐分类'
-                        //     this.type = '2'
-                        // }
-                        this.classData.title='添加项目信息'
+                    addClass() {
+                        this.classData.title = '添加用户信息'
                         this.action = 'add'
                         this.classData.name = ''
-                        this.classData.sort = ''
+                        // this.classData.sort = ''
                         this.classData.dialogVisible = true
                     },
                     editHandle(dat) {
-                        this.classData.title = '修改分类'
+                        this.classData.title = '修改用户信息'
                         this.action = 'edit'
                         this.classData.name = dat.name
-                        this.classData.sort = dat.sort
+                        // this.classData.sort = dat.sort
                         this.classData.id = dat.id
                         this.classData.dialogVisible = true
                     },
@@ -238,7 +264,7 @@
                             'cancelButtonText': '取消',
                             'type': 'warning'
                         }).then(() => {
-                            deleCategory(id).then(res => {
+                            deleteProj(id).then(res => {
                                 if (res.code === 1) {
                                     this.$message.success('删除成功！')
                                     this.handleQuery()
@@ -256,10 +282,8 @@
                         const valid = (classData.name === 0 || classData.name)
                         if (this.action === 'add') {
                             if (valid) {
-                                addCategory({
-                                    //TODO
-                                    'name': classData.name,
-                                    'type': this.type,
+                                addProj({
+                                    'projName':this.classData.projName
                                     // sort: classData.sort
                                 }).then(res => {
                                     console.log(res)
@@ -283,29 +307,9 @@
                                 this.$message.error('请输入项目名称')
                             }
                         } else if (valid) {
-                            // const reg = /^\d+$/
-                            // if (reg.test(this.classData.sort)) {
-                            //     editCategory({
-                            //         'id': this.classData.id,
-                            //         'name': this.classData.name,
-                            //         // sort: this.classData.sort
-                            //     }).then(res => {
-                            //         if (res.code === 1) {
-                            //             this.$message.success('分类修改成功！')
-                            //             this.classData.dialogVisible = false
-                            //             this.handleQuery()
-                            //         } else {
-                            //             this.$message.error(res.msg || '操作失败')
-                            //         }
-                            //     }).catch(err => {
-                            //         this.$message.error('请求出错了：' + err)
-                            //     })
-                            // } else {
-                            //     this.$message.error('排序只能输入数字类型')
-                            // }
-                            editCategory({
+                            updateProj({
                                 'id': this.classData.id,
-                                'name': this.classData.name,
+                                'projName':this.classData.projName
                                 // sort: this.classData.sort
                             }).then(res => {
                                 if (res.code === 1) {
