@@ -250,7 +250,8 @@
                     addClass() {
                         this.classData.title = '添加用户信息'
                         this.action = 'add'
-                        this.classData.name = ''
+                        this.classData.username = ''
+                        this.classData.usersex = '男'
                         this.classData.dialogVisible = true
                     },
                     editHandle(dat) {
@@ -349,7 +350,13 @@
                                     console.log(res)
                                     if (res.code === 1) {
                                         this.$message.success('用户添加成功！')
-                                        this.classData.dialogVisible = false
+                                        if (!st) {
+                                            this.classData.dialogVisible = false
+                                        } else {
+                                            this.classData.username = ''
+                                            this.classData.usersex = '男'
+                                        }
+
                                         this.handleQuery()
                                     } else {
                                         this.$message.error(res.msg || '操作失败')

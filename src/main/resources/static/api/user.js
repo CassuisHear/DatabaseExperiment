@@ -7,6 +7,23 @@ const getUserList = (params) => {
     })
 }
 
+// 查询项目
+const getProjList = (params) => {
+    return $axios({
+        url: '/user',
+        method: 'get',
+        params
+    })
+}
+
+const getUserProjList = (id) => {
+    return $axios({
+        url: 'user',
+        method: 'get',
+        params: {id}
+    })
+}
+
 const addUser = (params) => {
     return $axios({
         url: '/user',
