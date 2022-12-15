@@ -49,7 +49,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         List<UserDto> userDtoList = userList.stream().map(user -> {
 
             //获取单个User对应的id
-            Long userId = user.getUserId();
+            Long userId = user.getId();
 
             //再对proj_user表进行查询
             LambdaQueryWrapper<ProjUser> projUserQueryWrapper = new LambdaQueryWrapper<>();
@@ -64,7 +64,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
                 //查询proj表，根据projId得到项目名称并返回
                 LambdaQueryWrapper<Proj> projQueryWrapper = new LambdaQueryWrapper<>();
-                projQueryWrapper.eq(Proj::getProjId, projId);
+                projQueryWrapper.eq(Proj::getId, projId);
                 Proj proj = projService.getOne(projQueryWrapper);
                 return proj.getProjName();
             }).collect(Collectors.toList());

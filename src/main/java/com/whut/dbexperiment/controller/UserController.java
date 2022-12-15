@@ -47,7 +47,7 @@ public class UserController {
         }
 
         //4、登录成功，将 用户/人员 id存入Session并返回登录成功结果
-        request.getSession().setAttribute("user", userFromDB.getUserId());
+        request.getSession().setAttribute("user", userFromDB.getId());
 
         return R.success(userFromDB);
     }
@@ -73,7 +73,7 @@ public class UserController {
      * @return 分页的结果
      */
     @GetMapping("/page")
-    public R<Page> pageUser(int page, int pageSize){
+    public R<Page> pageUser(int page, int pageSize) {
 
         //创建分页构造器
         Page pageAns = new Page(page, pageSize);
@@ -83,4 +83,24 @@ public class UserController {
 
         return R.success(pageAns);
     }
+
+    /**
+     * 添加人员
+     *
+     * @param user 封装的User类对象
+     * @return 添加成功的信息
+     */
+    @PostMapping
+    public R<String> addUser(@RequestBody User user) {
+
+        //默认新添加的人员初始密码都为123456
+        user.setPassword("123456");
+
+        //直接调用方法添加人员信息
+        userService.save(user);
+
+        return R.success("添加人员成功!");
+    }
+
+
 }

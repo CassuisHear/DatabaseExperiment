@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Proj implements Serializable {
 
     //项目id
-    private Long projId;
+    private Long id;
 
     //项目状态
     private String projStatus;

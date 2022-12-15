@@ -148,6 +148,9 @@
                         class="demo-form-inline"
                         label-width="100px">
                     <el-form-item label="项目">
+                        <el-checkbox-group v-model="userProjList">
+                            <el-checkbox v-for="proj in projList" :label="proj" :key="proj">{{proj}}</el-checkbox>
+                        </el-checkbox-group>
                     </el-form-item>
                 </el-form>
                 <span
@@ -187,6 +190,7 @@
                         tableData: [],
                         type: '',
                         projList: [],
+                        userProjList: [],
                         classData: {
                             'title': '添加菜品分类',
                             'dialogVisible': false,
@@ -194,9 +198,11 @@
                             'categoryId': '',
                             'name': '',
                             sort: '',
+                            'id': '',
                             'username': '',
                             'usersex': '',
-                            'projs': ''
+                            'password': '',
+                            'projs': ['']
                         },
                     }
                 },
@@ -225,6 +231,16 @@
                         }).catch(err => {
                             this.$message.error('请求出错了：' + err)
                         })
+                        // this.projList = ["酒店管理系统", "机票预订系统", "电商管理系统", "项目管理系统", "淘宝", "图书管理系统"]
+                        getProjList({}).then(res => {
+                            if (String(res.code) === '1') {
+                                this.projList = res.data.records;
+                            } else {
+                                this.$message.error(res.msg || '操作失败')
+                            }
+                        }).catch(err => {
+                            this.$message.error('请求出错了:' + err)
+                        })
                     },
                     handleQuery() {
                         this.page = 1;
@@ -240,8 +256,11 @@
                     editHandle(dat) {
                         this.classData.title = '修改用户信息'
                         this.action = 'edit'
-                        this.classData.name = dat.name
                         this.classData.id = dat.id
+                        this.classData.usersex = dat.usersex
+                        this.classData.username = dat.username
+                        this.classData.password = dat.password
+                        this.classData.projs = dat.projs
                         this.classData.dialogVisible = true
                     },
                     // 关闭弹窗
@@ -277,19 +296,33 @@
                         this.classData.title = '选择项目'
                         this.action = 'update'
                         this.classData.id = dat.id
+                        this.classData.usersex = dat.usersex
+                        this.classData.username = dat.username
+                        this.classData.password = dat.password
+                        this.classData.projs = dat.projs
                         this.classData.dialogUpdateVisible = true
+                        getUserProjList({
+                            'id': this.classData.id
+                        }).then(res => {
+                            if (String(res.code) === '1') {
+                                this.userProjList = res.data.records
+                            } else {
+                                this.$message.error(res.msg || "操作失败")
+                            }
+
+                        }).catch(err => {
+                            this.$message.error("请求出错了：" + err)
+                        })
                     },
                     submitUpdateForm() {
                         const classData = this.classData
                         if (this.action === 'update') {
-                            //TODO
                             updateUser({
                                 'id': this.classData.id,
-                                'userName': this.classData.userName,
-                                'sex': this.classData.sex,
-                                'projName': this.classData.projName,
-                                'projs': this.projList
-                                // sort: this.classData.sort
+                                'password': this.classData.password,
+                                'username': this.classData.username,
+                                'usersex': this.classData.usersex,
+                                'projs': this.classData.projs
                             }).then(res => {
                                 if (res.code === 1) {
                                     this.$message.success('分类修改成功！')
@@ -309,20 +342,14 @@
                         if (this.action === 'add') {
                             if (classData.username !== '') {
                                 addUser({
-                                    'userName': this.classData.userName,
-                                    'sex': this.classData.sex,
-                                    'projName': this.classData.projName
-                                    // sort: classData.sort
+                                    'username': this.classData.username,
+                                    'usersex': this.classData.usersex,
+                                    'projs': []
                                 }).then(res => {
                                     console.log(res)
                                     if (res.code === 1) {
                                         this.$message.success('用户添加成功！')
-                                        if (!st) {
-                                            this.classData.dialogVisible = false
-                                        } else {
-                                            this.classData.name = ''
-                                            this.classData.sort = ''
-                                        }
+                                        this.classData.dialogVisible = false
                                         this.handleQuery()
                                     } else {
                                         this.$message.error(res.msg || '操作失败')
@@ -337,10 +364,9 @@
                         } else if (this.action === 'edit') {
                             updateUser({
                                 'id': this.classData.id,
-                                'userName': this.classData.userName,
-                                'sex': this.classData.sex,
-                                'projName': this.classData.projName,
-                                'projs': []
+                                'username': this.classData.username,
+                                'usersex': this.classData.usersex,
+                                'projs': this.classData.projs
                                 // sort: this.classData.sort
                             }).then(res => {
                                 if (res.code === 1) {

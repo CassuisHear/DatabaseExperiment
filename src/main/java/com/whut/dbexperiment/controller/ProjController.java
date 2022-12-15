@@ -6,9 +6,7 @@ import com.whut.dbexperiment.common.R;
 import com.whut.dbexperiment.entity.Proj;
 import com.whut.dbexperiment.service.ProjService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -43,5 +41,52 @@ public class ProjController {
         projService.page(pageAns, lambdaQueryWrapper);
 
         return R.success(pageAns);
+    }
+
+    /**
+     * 修改项目信息
+     *
+     * @param proj 封装的项目对象
+     * @return 项目修改成功的信息
+     */
+    @PutMapping
+    public R<String> updateProj(@RequestBody Proj proj) {
+
+        //直接调用方法进行更新
+        projService.updateById(proj);
+
+        return R.success("项目修改成功!");
+    }
+
+    /**
+     * 新增项目
+     *
+     * @param proj 封装的项目对象，初始情况下就只有projName一个属性
+     * @return 添加项目成功的信息
+     */
+    @PostMapping
+    public R<String> addProj(@RequestBody Proj proj) {
+
+        //为这个对象的其他属性赋值并添加到数据库中
+        proj.setUserCount(0);
+        proj.setProjStatus("unfinished");
+        projService.save(proj);
+
+        return R.success("项目添加成功!");
+    }
+
+    /**
+     * 删除项目
+     *
+     * @param ids 接收的项目id值
+     * @return 删除成功的信息
+     */
+    @DeleteMapping
+    public R<String> deleteProj(@RequestParam Long ids) {
+
+        //直接调用方法将改项目删除即可
+        projService.removeById(ids);
+
+        return R.success("项目删除成功!");
     }
 }

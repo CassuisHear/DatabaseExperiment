@@ -6,19 +6,11 @@ const getUserList = (params) => {
         params
     })
 }
-const getProjList = (params) => {
-    return $axios({
-        url: 'user',
-        method: 'get',
-        params
-    })
-}
-
 
 const addUser = (params) => {
     return $axios({
         url: '/user',
-        method: 'put',
+        method: 'post',
         data: {...params}
     })
 }

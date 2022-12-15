@@ -235,6 +235,7 @@
                             'categoryId': '',
                             'name': '',
                             sort: '',
+                            'id': '',
                             'projName': '',
                             'userCount': '',
                             'projStatus': '',
@@ -284,6 +285,9 @@
                         this.action = 'edit'
                         this.classData.name = dat.name
                         this.classData.id = dat.id
+                        this.classData.userCount = dat.userCount
+                        this.classData.beginTime = dat.beginTime
+                        this.classData.endTime = dat.endTime
                         this.classData.dialogVisible = true
                     },
                     // 关闭弹窗
@@ -327,7 +331,10 @@
                             updateProj({
                                 'id': this.classData.id,
                                 'projName': this.classData.projName,
-                                'projStatus': this.classData.projStatus
+                                'projStatus': this.classData.projStatus,
+                                'userCount': this.classData.userCount,
+                                'beginTime': this.classData.beginTime,
+                                'endTime': this.classData.endTime
                             }).then(res => {
                                 if (res.code === 1) {
                                     this.$message.success('项目修改成功！')
