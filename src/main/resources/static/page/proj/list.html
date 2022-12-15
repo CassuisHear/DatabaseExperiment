@@ -71,13 +71,13 @@
                                     @click="editHandle(scope.row)">
                                 修改
                             </el-button>
-<!--                            <el-button-->
-<!--                                    type="text"-->
-<!--                                    size="small"-->
-<!--                                    class="blueBug"-->
-<!--                                    @click="updateHandle(scope.row)">-->
-<!--                                人员调整-->
-<!--                            </el-button>-->
+                            <!--                            <el-button-->
+                            <!--                                    type="text"-->
+                            <!--                                    size="small"-->
+                            <!--                                    class="blueBug"-->
+                            <!--                                    @click="updateHandle(scope.row)">-->
+                            <!--                                人员调整-->
+                            <!--                            </el-button>-->
                             <el-button
                                     type="text"
                                     size="small"
@@ -174,39 +174,13 @@
                             type="primary"
                             size="medium"
                             class="continue"
-                            @click="submitAddForm('go')">
+                            @click="submitAddForm('go')"
+                            classData.projName=''>
                         保存并继续添加
                     </el-button>
                 </span>
             </el-dialog>
-            <!--            调整人员的框-->
-<!--            <el-dialog-->
-<!--                    :title="classData.title"-->
-<!--                    :visible.sync="classData.dialogVisible"-->
-<!--                    width="30%"-->
-<!--                    :before-close="handleClose">-->
-<!--                <el-form-->
-<!--                        class="demo-form-inline"-->
-<!--                        label-width="100px">-->
-<!--                    <el-form-item label="人员：">-->
 
-<!--                    </el-form-item>-->
-
-<!--                </el-form>-->
-<!--                <span slot="footer" class="dialog-footer">-->
-<!--                    <el-button-->
-<!--                            size="medium"-->
-<!--                            @click="classData.dialogUpdateVisible = false-->
-<!--                                    classData.projName=''-->
-<!--                                    classData.projStatus=''"-->
-<!--                    >取 消</el-button>-->
-<!--                    <el-button-->
-<!--                            type="primary"-->
-<!--                            size="medium"-->
-<!--                            @click="submitUpdateUserForm()"-->
-<!--                    >确 定</el-button>-->
-<!--                </span>-->
-<!--            </el-dialog>-->
         </div>
         <!-- 开发环境版本，包含了有帮助的命令行警告 -->
         <script src="../../plugins/vue/vue.js"></script>
@@ -283,7 +257,8 @@
                     editHandle(dat) {
                         this.classData.title = '修改项目信息'
                         this.action = 'edit'
-                        this.classData.name = dat.name
+                        this.classData.projName = dat.projName
+                        this.classData.projStatus = dat.projStatus
                         this.classData.id = dat.id
                         this.classData.userCount = dat.userCount
                         this.classData.beginTime = dat.beginTime
@@ -319,12 +294,6 @@
                             })
                         })
                     },
-                    //调整人员
-                    updateHandle(id) {
-                        this.classData.title = '修改人员信息'
-                        this.action = 'update'
-                        this.classData.dialogUpdateVisible = true
-                    },
                     //更新提交
                     submitUpdateForm() {
                         if (this.action === 'edit') {
@@ -339,6 +308,9 @@
                                 if (res.code === 1) {
                                     this.$message.success('项目修改成功！')
                                     this.classData.dialogVisible = false
+                                    this.classData.projName = ''
+                                    this.classData.projStatus = ''
+                                    this.classData.projs = []
                                     this.handleQuery()
                                 } else {
                                     this.$message.error(res.msg || '操作失败')
@@ -359,12 +331,13 @@
                                     console.log(res)
                                     if (res.code === 1) {
                                         this.$message.success('项目添加成功！')
+                                        //判断是继续还是结束
                                         if (!st) {
                                             this.classData.dialogAddVisible = false
                                         } else {
-                                            this.classData.name = ''
-                                            // this.classData.sort = ''
+                                            this.classData.projName = ''
                                         }
+
                                         this.handleQuery()
                                     } else {
                                         this.$message.error(res.msg || '操作失败')
@@ -375,12 +348,6 @@
                             } else {
                                 this.$message.error('请输入项目名称')
                             }
-                        }
-                    },
-                    //人员调整的提交
-                    submitUpdateUserForm(){
-                        if(this.action==='update'){
-
                         }
                     },
                     handleSizeChange(val) {
