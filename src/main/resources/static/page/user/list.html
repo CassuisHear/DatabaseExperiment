@@ -25,6 +25,22 @@
                         stripe
                         class="tableBox">
                     <el-table-column
+                            prop="id"
+                            label="id"
+                            v-show="false">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.id}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="password"
+                            label="password"
+                            v-show="false">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.password}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                             prop="username"
                             label="姓名">
                         <template slot-scope="scope">
@@ -254,14 +270,14 @@
                         this.classData.usersex = '男'
                         this.classData.dialogVisible = true
                     },
-                    editHandle(dat) {
+                    editHandle(row) {
                         this.classData.title = '修改用户信息'
                         this.action = 'edit'
-                        this.classData.id = dat.id
-                        this.classData.usersex = dat.usersex
-                        this.classData.username = dat.username
-                        this.classData.password = dat.password
-                        this.classData.projs = dat.projs
+                        this.classData.id = row.id
+                        this.classData.username = row.username
+                        this.classData.usersex = row.usersex
+                        this.classData.password = row.password
+                        this.classData.projs = row.projs
                         this.classData.dialogVisible = true
                     },
                     // 关闭弹窗
@@ -293,20 +309,21 @@
                         })
                     },
                     //调整项目
-                    updateHandle(dat) {
+                    updateHandle(row) {
                         this.classData.title = '选择项目'
                         this.action = 'update'
-                        this.classData.id = dat.id
-                        this.classData.usersex = dat.usersex
-                        this.classData.username = dat.username
-                        this.classData.password = dat.password
-                        this.classData.projs = dat.projs
+                        this.classData.id = row.id
+                        this.classData.username = row.username
+                        this.classData.usersex = row.usersex
+                        this.classData.password = row.password
+                        this.classData.projs = row.projs
                         this.classData.dialogUpdateVisible = true
                         getUserProjList({
                             'id': this.classData.id
                         }).then(res => {
                             if (String(res.code) === '1') {
                                 this.userProjList = res.data.records
+                                this.handleQuery()
                             } else {
                                 this.$message.error(res.msg || "操作失败")
                             }
@@ -356,7 +373,6 @@
                                             this.classData.username = ''
                                             this.classData.usersex = '男'
                                         }
-
                                         this.handleQuery()
                                     } else {
                                         this.$message.error(res.msg || '操作失败')
@@ -373,8 +389,8 @@
                                 'id': this.classData.id,
                                 'username': this.classData.username,
                                 'usersex': this.classData.usersex,
+                                'password': this.classData.password,
                                 'projs': this.classData.projs
-                                // sort: this.classData.sort
                             }).then(res => {
                                 if (res.code === 1) {
                                     this.$message.success('分类修改成功！')
