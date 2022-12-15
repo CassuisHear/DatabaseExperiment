@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -88,5 +89,23 @@ public class ProjController {
         projService.removeById(ids);
 
         return R.success("项目删除成功!");
+    }
+
+    /**
+     * 获取所有的项目集合
+     *
+     * @return 所有项目集合封装的R类对象
+     */
+    @GetMapping
+    public R<List<Proj>> getProjs() {
+
+        //创建查询条件
+        LambdaQueryWrapper<Proj> projQueryWrapper = new LambdaQueryWrapper<>();
+        projQueryWrapper.orderByDesc(Proj::getBeginTime);
+
+        //执行查询语句，获取Proj集合
+        List<Proj> projList = projService.list(projQueryWrapper);
+
+        return R.success(projList);
     }
 }

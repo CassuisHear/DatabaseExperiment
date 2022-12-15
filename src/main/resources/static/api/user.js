@@ -10,7 +10,7 @@ const getUserList = (params) => {
 // 查询项目
 const getProjList = (params) => {
     return $axios({
-        url: '/user',
+        url: '/proj',
         method: 'get',
         params
     })
