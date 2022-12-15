@@ -71,6 +71,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
             //最后返回UserDto类对象
             UserDto userDto = new UserDto();
+            userDto.setPassword(user.getPassword());
+            userDto.setId(user.getId());
             userDto.setUsername(user.getUsername());
             userDto.setUsersex(user.getUsersex());
             userDto.setProjs(projs);

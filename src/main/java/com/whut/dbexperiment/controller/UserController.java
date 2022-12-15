@@ -102,5 +102,33 @@ public class UserController {
         return R.success("添加人员成功!");
     }
 
+    /**
+     * 修改人员
+     *
+     * @param user 封装的User类对象
+     * @return 修改成功的信息
+     */
+    @PutMapping
+    public R<String> updateUser(@RequestBody User user) {
 
+        //直接调用方法修改人员信息
+        userService.updateById(user);
+
+        return R.success("人员修改成功!");
+    }
+
+    /**
+     * 删除人员
+     *
+     * @param ids 封装的User类对象
+     * @return 删除成功的信息
+     */
+    @DeleteMapping
+    public R<String> deleteUser(@RequestParam Long ids) {
+
+        //直接调用方法删除该人员信息
+        userService.removeById(ids);
+
+        return R.success("人员删除成功！");
+    }
 }

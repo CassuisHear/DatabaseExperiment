@@ -8,12 +8,16 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/project_management?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
-      password: w1277321189
+      password: asdfjkl
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 30MB
   mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  webflux:
     hiddenmethod:
       filter:
         enabled: true

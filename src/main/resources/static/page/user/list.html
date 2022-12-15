@@ -27,7 +27,7 @@
                     <el-table-column
                             prop="id"
                             label="id"
-                            v-show="false">
+                            v-if="false">
                         <template slot-scope="scope">
                             <span>{{scope.row.id}}</span>
                         </template>
@@ -35,7 +35,7 @@
                     <el-table-column
                             prop="password"
                             label="password"
-                            v-show="false">
+                            v-if="false">
                         <template slot-scope="scope">
                             <span>{{scope.row.password}}</span>
                         </template>
