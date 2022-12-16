@@ -16,13 +16,13 @@ const getProjList = (params) => {
     })
 }
 
-const getUserProjList = (id) => {
-    return $axios({
-        url: 'user',
-        method: 'get',
-        params: {id}
-    })
-}
+// const getUserProjList = (id) => {
+//     return $axios({
+//         url: '/user/getProjs',
+//         method: 'get',
+//         params
+//     })
+// }
 
 const addUser = (params) => {
     return $axios({
@@ -44,6 +44,14 @@ const deleteUser = (ids) => {
 const updateUser = (params) => {
     return $axios({
         url: '/user',
+        method: 'put',
+        data: {...params}
+    })
+}
+
+const updateUserDto = (params) => {
+    return $axios({
+        url: '/user/userDto',
         method: 'put',
         data: {...params}
     })

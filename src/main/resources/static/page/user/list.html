@@ -112,7 +112,7 @@
                     <el-form-item label="姓名">
                         <el-input
                                 v-model="classData.username"
-                                placeholder="请输入姓名"
+                                placeholder="请输入新的姓名"
                                 maxlength="14">
                         </el-input>
                     </el-form-item>
@@ -126,6 +126,14 @@
                                        :value="item">
                             </el-option>
                         </el-select>
+                    </el-form-item>
+                    <el-form-item label="密码">
+                        <el-input
+                                type="password"
+                                v-model="classData.password"
+                                placeholder="请输入新的密码"
+                                maxlength="14">
+                        </el-input>
                     </el-form-item>
                 </el-form>
                 <span
@@ -247,16 +255,6 @@
                         }).catch(err => {
                             this.$message.error('请求出错了：' + err)
                         })
-                        // this.projList = ["酒店管理系统", "机票预订系统", "电商管理系统", "项目管理系统", "淘宝", "图书管理系统"]
-                        getProjList({}).then(res => {
-                            if (String(res.code) === '1') {
-                                this.projList = res.data.records;
-                            } else {
-                                this.$message.error(res.msg || '操作失败')
-                            }
-                        }).catch(err => {
-                            this.$message.error('请求出错了:' + err)
-                        })
                     },
                     handleQuery() {
                         this.page = 1;
@@ -291,7 +289,7 @@
                     },
                     //删除
                     deleteHandle(id) {
-                        this.$confirm('此操作将永久删除该该用户, 是否继续?', '提示', {
+                        this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
                             'confirmButtonText': '确定',
                             'cancelButtonText': '取消',
                             'type': 'warning'
@@ -316,35 +314,45 @@
                         this.classData.username = row.username
                         this.classData.usersex = row.usersex
                         this.classData.password = row.password
-                        this.classData.projs = row.projs
+                        this.userProjList = row.projs
                         this.classData.dialogUpdateVisible = true
-                        getUserProjList({
-                            'id': this.classData.id
-                        }).then(res => {
+                        // this.projList = ["酒店管理系统", "机票预订系统", "电商管理系统", "项目管理系统", "淘宝", "图书管理系统"]
+                        getProjList().then(res => {
                             if (String(res.code) === '1') {
-                                this.userProjList = res.data.records
-                                this.handleQuery()
+                                this.projList = res.data;
                             } else {
-                                this.$message.error(res.msg || "操作失败")
+                                this.$message.error(res.msg || '操作失败')
                             }
-
                         }).catch(err => {
-                            this.$message.error("请求出错了：" + err)
+                                this.$message.error('请求出错了:' + err)
                         })
+                        // this.projList = ["酒店管理系统", "机票预订系统"]
+                        // getUserProjList({
+                        //     'id': this.classData.id
+                        // }).then(res => {
+                        //     if (String(res.code) === '1') {
+                        //         this.userProjList = res.data
+                        //     } else {
+                        //         this.$message.error(res.msg || "操作失败")
+                        //     }
+                        //
+                        // }).catch(err => {
+                        //     this.$message.error("请求出错了：" + err)
+                        // })
                     },
                     submitUpdateForm() {
                         const classData = this.classData
                         if (this.action === 'update') {
-                            updateUser({
+                            updateUserDto({
                                 'id': this.classData.id,
-                                'password': this.classData.password,
                                 'username': this.classData.username,
                                 'usersex': this.classData.usersex,
-                                'projs': this.classData.projs
+                                'password': this.classData.password,
+                                'projs': this.userProjList
                             }).then(res => {
                                 if (res.code === 1) {
                                     this.$message.success('分类修改成功！')
-                                    this.classData.dialogVisible = false
+                                    this.classData.dialogUpdateVisible = false
                                     this.handleQuery()
                                 } else {
                                     this.$message.error(res.msg || '操作失败')
@@ -362,6 +370,7 @@
                                 addUser({
                                     'username': this.classData.username,
                                     'usersex': this.classData.usersex,
+                                    'password': this.classData.password,
                                     'projs': []
                                 }).then(res => {
                                     console.log(res)

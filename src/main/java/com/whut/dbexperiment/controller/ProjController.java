@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -45,21 +46,6 @@ public class ProjController {
     }
 
     /**
-     * 修改项目信息
-     *
-     * @param proj 封装的项目对象
-     * @return 项目修改成功的信息
-     */
-    @PutMapping
-    public R<String> updateProj(@RequestBody Proj proj) {
-
-        //直接调用方法进行更新
-        projService.updateById(proj);
-
-        return R.success("项目修改成功!");
-    }
-
-    /**
      * 新增项目
      *
      * @param proj 封装的项目对象，初始情况下就只有projName一个属性
@@ -77,6 +63,21 @@ public class ProjController {
     }
 
     /**
+     * 修改项目信息
+     *
+     * @param proj 封装的项目对象
+     * @return 项目修改成功的信息
+     */
+    @PutMapping
+    public R<String> updateProj(@RequestBody Proj proj) {
+
+        //直接调用拓展的方法进行更新
+        projService.updateOneProj(proj);
+
+        return R.success("项目修改成功!");
+    }
+
+    /**
      * 删除项目
      *
      * @param ids 接收的项目id值
@@ -85,8 +86,8 @@ public class ProjController {
     @DeleteMapping
     public R<String> deleteProj(@RequestParam Long ids) {
 
-        //直接调用方法将改项目删除即可
-        projService.removeById(ids);
+        //直接调用拓展的方法将改项目删除即可
+        projService.removeOneProj(ids);
 
         return R.success("项目删除成功!");
     }
@@ -97,7 +98,7 @@ public class ProjController {
      * @return 所有项目集合封装的R类对象
      */
     @GetMapping
-    public R<List<Proj>> getProjs() {
+    public R<List<String>> getProjs() {
 
         //创建查询条件
         LambdaQueryWrapper<Proj> projQueryWrapper = new LambdaQueryWrapper<>();
@@ -106,6 +107,9 @@ public class ProjController {
         //执行查询语句，获取Proj集合
         List<Proj> projList = projService.list(projQueryWrapper);
 
-        return R.success(projList);
+        //最后获取项目名集合
+        List<String> projNames = projList.stream().map(Proj::getProjName).collect(Collectors.toList());
+
+        return R.success(projNames);
     }
 }

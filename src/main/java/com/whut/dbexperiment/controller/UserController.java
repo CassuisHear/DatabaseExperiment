@@ -3,13 +3,17 @@ package com.whut.dbexperiment.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.whut.dbexperiment.common.R;
+import com.whut.dbexperiment.entity.Proj;
 import com.whut.dbexperiment.entity.User;
+import com.whut.dbexperiment.entity.UserDto;
 import com.whut.dbexperiment.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -93,9 +97,6 @@ public class UserController {
     @PostMapping
     public R<String> addUser(@RequestBody User user) {
 
-        //默认新添加的人员初始密码都为123456
-        user.setPassword("123456");
-
         //直接调用方法添加人员信息
         userService.save(user);
 
@@ -126,9 +127,24 @@ public class UserController {
     @DeleteMapping
     public R<String> deleteUser(@RequestParam Long ids) {
 
-        //直接调用方法删除该人员信息
-        userService.removeById(ids);
+        //直接调用拓展的方法删除该人员信息
+        userService.removeUserInfo(ids);
 
         return R.success("人员删除成功！");
+    }
+
+    /**
+     * 根据传回来的UserDto对象更新某个人员所属的项目
+     *
+     * @param userDto 封装的UserDto对象
+     * @return 更新成功的信息
+     */
+    @PutMapping("/userDto")
+    public R<String> updateUserDto(@RequestBody UserDto userDto) {
+
+        //直接调用拓展的方法进行相关信息的更新
+        userService.updateProjUserByUserDto(userDto);
+
+        return R.success("该人员所属的项目已修改成功!");
     }
 }
